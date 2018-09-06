@@ -1,0 +1,48 @@
+package nulls
+
+import (
+  "bytes"
+  "database/sql"
+  "encoding/json"
+)
+
+type String struct { sql.NullString }
+
+func NewString(s string) (String) {
+  return String{sql.NullString{s, true}}
+}
+
+func NewNullString() (String) {
+  return String{sql.NullString{"", false}}
+}
+
+func (ns *String) MarshalJSON() ([]byte, error) {
+	if !ns.Valid {
+		return nullJSON, nil
+	}
+	return json.Marshal(ns.String)
+}
+
+func (ns *String) UnmarshalJSON(b []byte) error {
+  var err error = nil
+  if bytes.Equal(nullJSON, b) {
+    ns.String = ""
+    ns.Valid = false
+  } else {
+  	err = json.Unmarshal(b, &ns.String)
+  	ns.Valid = (err == nil)
+  }
+	return err
+}
+
+func (ns *String) Native() *sql.NullString {
+  return &sql.NullString{String: ns.String, Valid: ns.Valid}
+}
+
+func (n *String) IsEmpty() (bool) {
+  return !n.Valid || n.String == ""
+}
+
+func (n *String) IsValid() (bool) {
+  return n.Valid
+}
