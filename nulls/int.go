@@ -36,7 +36,7 @@ func (ni *Int64) UnmarshalJSON(b []byte) error {
 }
 
 func (ni *Int64) Native() *sql.NullInt64 {
-  return &sql.NullInt64{Int64: ni.Int64, Valid: ni.Valid}
+  return &ni.NullInt64
 }
 
 func (n *Int64) IsEmpty() (bool) {

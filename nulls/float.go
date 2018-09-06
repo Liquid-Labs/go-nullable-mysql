@@ -36,7 +36,7 @@ func (nf *Float64) UnmarshalJSON(b []byte) error {
 }
 
 func (nf *Float64) Native() *sql.NullFloat64 {
-  return &sql.NullFloat64{Float64: nf.Float64, Valid: nf.Valid}
+  return &nf.NullFloat64
 }
 
 func (n *Float64) IsEmpty() (bool) {

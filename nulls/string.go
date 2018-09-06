@@ -36,13 +36,13 @@ func (ns *String) UnmarshalJSON(b []byte) error {
 }
 
 func (ns *String) Native() *sql.NullString {
-  return &sql.NullString{String: ns.String, Valid: ns.Valid}
+  return &ns.NullString
 }
 
-func (n *String) IsEmpty() (bool) {
-  return !n.Valid || n.String == ""
+func (ns *String) IsEmpty() (bool) {
+  return !ns.Valid || ns.String == ""
 }
 
-func (n *String) IsValid() (bool) {
-  return n.Valid
+func (ns *String) IsValid() (bool) {
+  return ns.Valid
 }
