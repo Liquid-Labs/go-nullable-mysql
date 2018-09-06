@@ -6,12 +6,12 @@ Enhanced support of `NULL` values in JSON marshalling and unmarshalling for MySQ
 import (
 ...
   "database/sql"
-  . "github.com/Liquid-Labs/go-nullable-mysql/nullmysql"
+  "github.com/Liquid-Labs/go-nullable-mysql/nulls"
 )
 
 type Foo struct {
-  ADate       NullDate      `json:"aDate"`
-  ATimestamp  NullTimestamp `json:"aTime"`
+  ADate       null.Date      `json:"aDate"`
+  ATimestamp  null.Timestamp `json:"aTime"`
 }
 
 func SaveData(foo *Foo) (error) {
