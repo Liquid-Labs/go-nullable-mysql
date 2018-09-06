@@ -83,7 +83,7 @@ func (nd *Date) UnmarshalJSON(b []byte) error {
 }
 
 func (nd *Date) Native() *sql.NullString {
-  return &sql.NullString{String: nd.String, Valid: nd.Valid}
+  return &nd.NullString
 }
 
 func (n *Date) IsEmpty() (bool) {

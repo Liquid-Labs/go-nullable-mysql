@@ -36,7 +36,7 @@ func (nb *Bool) UnmarshalJSON(b []byte) error {
 }
 
 func (nb *Bool) Native() *sql.NullBool {
-  return &sql.NullBool{Bool: nb.Bool, Valid: nb.Valid}
+  return &nb.NullBool
 }
 
 func (n *Bool) IsEmpty() (bool) {

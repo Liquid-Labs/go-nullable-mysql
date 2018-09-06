@@ -50,7 +50,7 @@ func (nt *Timestamp) UnmarshalJSON(b []byte) error {
 }
 
 func (nt *Timestamp) Native() *mysql.NullTime {
-  return &mysql.NullTime{Time: nt.Time, Valid: nt.Valid}
+  return &nt.NullTime
 }
 
 func (n *Timestamp) IsEmpty() (bool) {
