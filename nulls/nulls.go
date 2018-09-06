@@ -1,4 +1,4 @@
-package nullabledb
+package nulls
 // Thanks to Supid Raval
 // https://gist.github.com/rsudip90/45fad7d8959c58bcc91d464873b50013
 // to get us started, though that code did not handle unmarshalling nulls
@@ -26,30 +26,24 @@ type Nullable interface{
   IsValid() (bool)
 }
 
-type NullInt64 sql.NullInt64
+type Int64 struct { sql.NullInt64 }
 
-func (ni *NullInt64) Scan(value interface{}) error {
-	var i sql.NullInt64
-	if err := i.Scan(value); err != nil {
-		return err
-	}
-
-	if reflect.TypeOf(value) == nil {
-		*ni = NullInt64{i.Int64, false}
-	} else {
-		*ni = NullInt64{i.Int64, true}
-	}
-	return nil
+func NewInt64(i int64) (Int64) {
+  return Int64{sql.NullInt64{i, true}}
 }
 
-func (ni *NullInt64) MarshalJSON() ([]byte, error) {
+func NewNullInt64() (Int64) {
+  return Int64{sql.NullInt64{0, false}}
+}
+
+func (ni *Int64) MarshalJSON() ([]byte, error) {
 	if !ni.Valid {
 		return nullJSON, nil
 	}
 	return json.Marshal(ni.Int64)
 }
 
-func (ni *NullInt64) UnmarshalJSON(b []byte) error {
+func (ni *Int64) UnmarshalJSON(b []byte) error {
   var err error = nil
   if bytes.Equal(nullJSON, b) {
     ni.Int64 = 0
@@ -61,45 +55,38 @@ func (ni *NullInt64) UnmarshalJSON(b []byte) error {
 	return err
 }
 
-func (ni* NullInt64) Native() *sql.NullInt64 {
+func (ni *Int64) Native() *sql.NullInt64 {
   return &sql.NullInt64{Int64: ni.Int64, Valid: ni.Valid}
 }
 
-func (n* NullInt64) IsEmpty() (bool) {
+func (n *Int64) IsEmpty() (bool) {
   return !n.Valid
 }
 
-func (n* NullInt64) IsValid() (bool) {
+func (n *Int64) IsValid() (bool) {
   return n.Valid
 }
 
 // END: Null64Int handlers
 
-type NullBool sql.NullBool
+type Bool struct { sql.NullBool }
 
-func (nb *NullBool) Scan(value interface{}) error {
-	var b sql.NullBool
-	if err := b.Scan(value); err != nil {
-		return err
-	}
-
-	if reflect.TypeOf(value) == nil {
-		*nb = NullBool{b.Bool, false}
-	} else {
-		*nb = NullBool{b.Bool, true}
-	}
-
-	return nil
+func NewBool(b bool) (Bool) {
+  return Bool{sql.NullBool{b, true}}
 }
 
-func (nb *NullBool) MarshalJSON() ([]byte, error) {
+func NewNullBool() (Bool) {
+  return Bool{sql.NullBool{false, false}}
+}
+
+func (nb *Bool) MarshalJSON() ([]byte, error) {
 	if !nb.Valid {
 		return nullJSON, nil
 	}
 	return json.Marshal(nb.Bool)
 }
 
-func (nb *NullBool) UnmarshalJSON(b []byte) error {
+func (nb *Bool) UnmarshalJSON(b []byte) error {
   var err error = nil
   if bytes.Equal(nullJSON, b) {
     nb.Bool = false
@@ -111,44 +98,37 @@ func (nb *NullBool) UnmarshalJSON(b []byte) error {
 	return err
 }
 
-func (nb* NullBool) Native() *sql.NullBool {
+func (nb *Bool) Native() *sql.NullBool {
   return &sql.NullBool{Bool: nb.Bool, Valid: nb.Valid}
 }
 
-func (n* NullBool) IsEmpty() (bool) {
+func (n *Bool) IsEmpty() (bool) {
   return !n.Valid
 }
 
-func (n* NullBool) IsValid() (bool) {
+func (n *Bool) IsValid() (bool) {
   return n.Valid
 }
 // END NullBool handlers
 
-type NullFloat64 sql.NullFloat64
+type Float64 struct { sql.NullFloat64 }
 
-func (nf *NullFloat64) Scan(value interface{}) error {
-	var f sql.NullFloat64
-	if err := f.Scan(value); err != nil {
-		return err
-	}
-
-	if reflect.TypeOf(value) == nil {
-		*nf = NullFloat64{f.Float64, false}
-	} else {
-		*nf = NullFloat64{f.Float64, true}
-	}
-
-	return nil
+func NewFloat64(f float64) (Float64) {
+  return Float64{sql.NullFloat64{f, true}}
 }
 
-func (nf *NullFloat64) MarshalJSON() ([]byte, error) {
+func NewNullFloat64() (Float64) {
+  return Float64{sql.NullFloat64{0.0, false}}
+}
+
+func (nf *Float64) MarshalJSON() ([]byte, error) {
 	if !nf.Valid {
 		return nullJSON, nil
 	}
 	return json.Marshal(nf.Float64)
 }
 
-func (nf *NullFloat64) UnmarshalJSON(b []byte) error {
+func (nf *Float64) UnmarshalJSON(b []byte) error {
   var err error = nil
   if bytes.Equal(nullJSON, b) {
     nf.Float64 = 0.0
@@ -160,45 +140,38 @@ func (nf *NullFloat64) UnmarshalJSON(b []byte) error {
 	return err
 }
 
-func (nf* NullFloat64) Native() *sql.NullFloat64 {
+func (nf *Float64) Native() *sql.NullFloat64 {
   return &sql.NullFloat64{Float64: nf.Float64, Valid: nf.Valid}
 }
 
-func (n* NullFloat64) IsEmpty() (bool) {
+func (n *Float64) IsEmpty() (bool) {
   return !n.Valid
 }
 
-func (n* NullFloat64) IsValid() (bool) {
+func (n *Float64) IsValid() (bool) {
   return n.Valid
 }
 // END NullFloat64 handlers
 
 // NullString is an alias for sql.NullString data type
-type NullString sql.NullString
+type String struct { sql.NullString }
 
-func (ns *NullString) Scan(value interface{}) error {
-	var s sql.NullString
-	if err := s.Scan(value); err != nil {
-		return err
-	}
-
-	if reflect.TypeOf(value) == nil {
-		*ns = NullString{s.String, false}
-	} else {
-		*ns = NullString{s.String, true}
-	}
-
-	return nil
+func NewString(s string) (String) {
+  return String{sql.NullString{s, true}}
 }
 
-func (ns *NullString) MarshalJSON() ([]byte, error) {
+func NewNullString() (String) {
+  return String{sql.NullString{"", false}}
+}
+
+func (ns *String) MarshalJSON() ([]byte, error) {
 	if !ns.Valid {
 		return nullJSON, nil
 	}
 	return json.Marshal(ns.String)
 }
 
-func (ns *NullString) UnmarshalJSON(b []byte) error {
+func (ns *String) UnmarshalJSON(b []byte) error {
   var err error = nil
   if bytes.Equal(nullJSON, b) {
     ns.String = ""
@@ -210,38 +183,30 @@ func (ns *NullString) UnmarshalJSON(b []byte) error {
 	return err
 }
 
-func (ns* NullString) Native() *sql.NullString {
+func (ns *String) Native() *sql.NullString {
   return &sql.NullString{String: ns.String, Valid: ns.Valid}
 }
 
-func (n* NullString) IsEmpty() (bool) {
+func (n *String) IsEmpty() (bool) {
   return !n.Valid || n.String == ""
 }
 
-func (n* NullString) IsValid() (bool) {
+func (n *String) IsValid() (bool) {
   return n.Valid
 }
 // END NullString handlers
 
-// TODO: This should be NullTimestamp
-type NullTime mysql.NullTime
+type Timestamp struct { mysql.NullTime }
 
-func (nt *NullTime) Scan(value interface{}) error {
-	var t mysql.NullTime
-	if err := t.Scan(value); err != nil {
-		return err
-	}
-
-	if reflect.TypeOf(value) == nil {
-		*nt = NullTime{t.Time, false}
-	} else {
-		*nt = NullTime{t.Time, true}
-	}
-
-	return nil
+func NewTimestamp(t time.Time) (Timestamp) {
+  return Timestamp{mysql.NullTime{t, true}}
 }
 
-func (nt *NullTime) MarshalJSON() ([]byte, error) {
+func NewNullTimestamp() (Timestamp) {
+  return Timestamp{mysql.NullTime{nullTime, false}}
+}
+
+func (nt *Timestamp) MarshalJSON() ([]byte, error) {
 	if !nt.Valid {
 		return nullJSON, nil
 	}
@@ -249,7 +214,7 @@ func (nt *NullTime) MarshalJSON() ([]byte, error) {
 	return []byte(val), nil
 }
 
-func (nt *NullTime) UnmarshalJSON(b []byte) error {
+func (nt *Timestamp) UnmarshalJSON(b []byte) error {
   if bytes.Equal(nullJSON, b) {
     nt.Time = nullTime
     nt.Valid = false
@@ -269,32 +234,40 @@ func (nt *NullTime) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (nt* NullTime) Native() *mysql.NullTime {
+func (nt *Timestamp) Native() *mysql.NullTime {
   return &mysql.NullTime{Time: nt.Time, Valid: nt.Valid}
 }
 
-func (n* NullTime) IsEmpty() (bool) {
+func (n *Timestamp) IsEmpty() (bool) {
   return !n.Valid
 }
 
-func (n* NullTime) IsValid() (bool) {
+func (n *Timestamp) IsValid() (bool) {
   return n.Valid
 }
 // END NullTime handlers
 
 // Date is 'timezone-less' so we base if off string as all we care about is
 // YYYY-MM-DD format.
-type NullDate sql.NullString
+type Date struct { sql.NullString }
 var dateRegexp *regexp.Regexp = regexp.MustCompile(`((\d{4})[\.-](\d\d)[\.-](\d\d))`)
 
-func (nt *NullDate) Scan(value interface{}) error {
+func NewDate(s string) (Date) {
+  return Date{sql.NullString{s, true}}
+}
+
+func NewNullDate() (Date) {
+  return Date{sql.NullString{"", false}}
+}
+
+func (nt *Date) Scan(value interface{}) error {
 	var s sql.NullString
 	if err := s.Scan(value); err != nil {
 		return err
 	}
 
 	if reflect.TypeOf(value) == nil {
-		*nt = NullDate{s.String, false}
+		*nt = NewNullDate()
 	} else {
     matches := dateRegexp.FindStringSubmatch(s.String)
     // Any invalid date results in an error.
@@ -320,20 +293,20 @@ func (nt *NullDate) Scan(value interface{}) error {
       return fmt.Errorf("'%s' specifies a non-existent date (e.g., '2000-10-32').", s.String)
     }
     // Pull out just the 'YYYY-MM-DD' part; 'nt.String' will come in from MySQL with 'T00:00:00Z' on the end.
-		*nt = NullDate{matches[1], true}
+		*nt = NewDate(matches[1])
 	}
 
 	return nil
 }
 
-func (nd *NullDate) MarshalJSON() ([]byte, error) {
+func (nd *Date) MarshalJSON() ([]byte, error) {
   if !nd.Valid {
     return nullJSON, nil
   }
   return json.Marshal(nd.String)
 }
 
-func (nd *NullDate) UnmarshalJSON(b []byte) error {
+func (nd *Date) UnmarshalJSON(b []byte) error {
   var err error = nil
   if bytes.Equal(nullJSON, b) {
     nd.String = ""
@@ -345,15 +318,15 @@ func (nd *NullDate) UnmarshalJSON(b []byte) error {
   return err
 }
 
-func (nd* NullDate) Native() *sql.NullString {
+func (nd *Date) Native() *sql.NullString {
   return &sql.NullString{String: nd.String, Valid: nd.Valid}
 }
 
-func (n* NullDate) IsEmpty() (bool) {
+func (n *Date) IsEmpty() (bool) {
   return !n.Valid
 }
 
-func (n* NullDate) IsValid() (bool) {
+func (n *Date) IsValid() (bool) {
   return n.Valid
 }
 // END NullDate handlers
