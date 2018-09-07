@@ -21,7 +21,7 @@ func NewNullTimestamp() (Timestamp) {
   return Timestamp{mysql.NullTime{nullTime, false}}
 }
 
-func (nt *Timestamp) MarshalJSON() ([]byte, error) {
+func (nt Timestamp) MarshalJSON() ([]byte, error) {
 	if !nt.Valid {
 		return nullJSON, nil
 	}
@@ -49,14 +49,10 @@ func (nt *Timestamp) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func (nt *Timestamp) Native() *mysql.NullTime {
-  return &nt.NullTime
-}
-
-func (n *Timestamp) IsEmpty() (bool) {
+func (n Timestamp) IsEmpty() (bool) {
   return !n.Valid
 }
 
-func (n *Timestamp) IsValid() (bool) {
+func (n Timestamp) IsValid() (bool) {
   return n.Valid
 }

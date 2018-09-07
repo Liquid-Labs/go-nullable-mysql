@@ -16,7 +16,7 @@ func NewNullString() (String) {
   return String{sql.NullString{"", false}}
 }
 
-func (ns *String) MarshalJSON() ([]byte, error) {
+func (ns String) MarshalJSON() ([]byte, error) {
 	if !ns.Valid {
 		return nullJSON, nil
 	}
@@ -35,14 +35,10 @@ func (ns *String) UnmarshalJSON(b []byte) error {
 	return err
 }
 
-func (ns *String) Native() *sql.NullString {
-  return &ns.NullString
-}
-
-func (ns *String) IsEmpty() (bool) {
+func (ns String) IsEmpty() (bool) {
   return !ns.Valid || ns.String == ""
 }
 
-func (ns *String) IsValid() (bool) {
+func (ns String) IsValid() (bool) {
   return ns.Valid
 }
