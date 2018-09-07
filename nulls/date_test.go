@@ -1,17 +1,17 @@
 package nulls
 
 import (
-	// "encoding/json"
+	"encoding/json"
 	"testing"
 )
 
 var (
   validDateString = `2018-05-08`
-	validDateJson  = []byte(validDateString)
+	validDateJson  = []byte(`"` + validDateString + `"`)
   invalidMonthString = `2018-13-08`
-	invalidMonthJson = []byte(invalidMonthString)
+	invalidMonthJson = []byte(`"` + invalidMonthString + `"`)
   invalidDayString = `2018-06-31`
-  ivalidDayJson = []byte(invalidDayString)
+  invalidDayJson = []byte(`"` + invalidDayString + `"`)
 )
 
 func TestNewDate(t *testing.T) {
@@ -31,30 +31,27 @@ func TestNewDate(t *testing.T) {
   assertError(t, err)
   assertInvalid(t, d, "NewDate(" + intString + ")")
 }
+
+func TestNewNullDate(t *testing.T) {
+  assertInvalid(t, NewNullBool(), "NewNullDate()")
+}
+
+func TestUnmarshalDate(t *testing.T) {
+	testStrings := []string{validDateString, invalidMonthString, invalidDayString, intString}
+  testJsons := [][]byte{validDateJson, invalidMonthJson, invalidDayJson, intJson}
+  const lastGood = 0
+  var d Date
+  for i, dateJson := range testJsons {
+    if i <= lastGood {
+      assertNoError(t, json.Unmarshal(dateJson, &d))
+    	assertDateValue(t, d, testStrings[i], `json ` + string(dateJson))
+    } else {
+      assertError(t, json.Unmarshal(dateJson, &d))
+      assertInvalid(t, d, `json ` + string(dateJson))
+    }
+  }
+}
 /*
-func TestNewNullBool(t *testing.T) {
-  assertBoolNull(t, NewNullBool(), "NewNullBool()")
-}
-
-func TestUnmarshalBool(t *testing.T) {
-	var b Bool
-  // true
-  panicIfErr(json.Unmarshal(boolTrueJson, &b))
-	assertBoolValue(t, b, true, `json ` + boolTrueString)
-  // false
-  panicIfErr(json.Unmarshal(boolFalseJson, &b))
-  assertBoolValue(t, b, false, `json ` + boolFalseString)
-  // null
-  panicIfErr(json.Unmarshal(nullJson, &b))
-	assertBoolNull(t, b, `json ` + nullString)
-  // bad type, thugh valid JSON
-  assertError(t, json.Unmarshal(intJson, &b))
-	assertBoolNull(t, b, `json ` + intString)
-  // invalid json
-  assertJsonSyntaxError(t, json.Unmarshal(invalidJson, &b))
-	assertBoolNull(t, b, `json ` + invalidJsonString)
-}
-
 func TestMarshalBool(t *testing.T) {
 	data, err := json.Marshal(NewBool(true))
 	panicIfErr(err)
