@@ -1,3 +1,6 @@
+*Code is still very alpha... use at own risk.* It is under daily use, but need
+to complete tests, docs, etc. and breaking changes may be on the way.
+
 # go-nullable-mysql
 Enhanced support of `NULL` values in JSON marshalling and unmarshalling for MySQL datatypes in Go. I.e., SQL `NULL` <-> JSON `null`. Also, add support for MySQL `DATE` types.
 
@@ -6,16 +9,18 @@ Enhanced support of `NULL` values in JSON marshalling and unmarshalling for MySQ
 import (
 ...
   "database/sql"
+  "time"
+
   "github.com/Liquid-Labs/go-nullable-mysql/nulls"
 )
 
 type Foo struct {
-  ADate       null.Date      `json:"aDate"`
-  ATimestamp  null.Timestamp `json:"aTime"`
+  ADate       nulls.Date      `json:"aDate"`
+  ATimestamp  nulls.Timestamp `json:"aTime"`
 }
 
 func SaveData(foo *Foo) (error) {
-  _, err := insertFooStmt.Exec(foo.ADate.Native(), foo.ATimestamp.Native())
+  _, err := insertFooStmt.Exec(foo.ADate, foo.ATimestamp)
   ...
 }
 
@@ -25,6 +30,10 @@ func ScanFoo(row sql.Row) (*Foo, error) {
     return nil, err
    }
    return &foo, nil
+}
+
+func MakeFoo(dateString string, time time.timeStamp) (Foo) {
+  return Foo{nulls.NewDate(dateString), nulls.NewTimestamp(time)}
 }
 ```
 
@@ -38,5 +47,8 @@ Supported types are:
 
 # References
 
-* As an alternative, check out the [guregu/null](https://github.com/guregu/null) package.
 * This work was based on implementation by [Supid Ravel](https://medium.com/@rsudip90) as discusesd in [this Medium article](https://medium.com/aubergine-solutions/how-i-handled-null-possible-values-from-database-rows-in-golang-521fb0ee267).
+* [guregu/null](https://github.com/guregu/null) was used as an exapmle to
+kickstart the unit tests. [guregu/null](https://github.com/guregu/null) is a
+good alternative with similar functionality and a slightly different feature
+set.
