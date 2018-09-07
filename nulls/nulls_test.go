@@ -3,6 +3,8 @@ package nulls
 import (
   "bytes"
   "encoding/json"
+  "reflect"
+  "runtime"
   "testing"
 )
 
@@ -12,6 +14,20 @@ var (
   invalidJsonString = `":)`
   invalidJson = []byte(invalidJsonString)
 )
+
+func testNullConstructors(t *testing.T) {
+  constructors := []interface{}{NewNullBool, NewNullDate, NewNullFloat64, NewNullInt64, NewNullString, NewNullTimestamp}
+  for _, constructor := range constructors {
+    assertInvalid(t, constructor.(func()(Nullable))(), runtime.FuncForPC(reflect.ValueOf(constructor).Pointer()).Name() + `()`)
+  }
+}
+
+func assertValid(t *testing.T, n Nullable, from string) {
+  t.Helper()
+  if !n.IsValid() {
+    t.Error(from, "is invalid, but should be valid")
+  }
+}
 
 func assertInvalid(t *testing.T, n Nullable, from string) {
   t.Helper()

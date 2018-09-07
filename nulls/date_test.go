@@ -27,18 +27,14 @@ func TestNewDate(t *testing.T) {
   assertError(t, err)
   assertInvalid(t, d, "NewDate(" + invalidDayString + ")")
 
-  d, err = NewDate(intString)
+  d, err = NewDate(positiveIntString)
   assertError(t, err)
-  assertInvalid(t, d, "NewDate(" + intString + ")")
-}
-
-func TestNewNullDate(t *testing.T) {
-  assertInvalid(t, NewNullBool(), "NewNullDate()")
+  assertInvalid(t, d, "NewDate(" + positiveIntString + ")")
 }
 
 func TestUnmarshalDate(t *testing.T) {
-	testStrings := []string{validDateString, invalidMonthString, invalidDayString, intString}
-  testJsons := [][]byte{validDateJson, invalidMonthJson, invalidDayJson, intJson}
+	testStrings := []string{validDateString, invalidMonthString, invalidDayString, positiveIntString}
+  testJsons := [][]byte{validDateJson, invalidMonthJson, invalidDayJson, positiveIntJson}
   const lastGood = 0
   var d Date
   for i, dateJson := range testJsons {
@@ -71,7 +67,5 @@ func assertDateValue(t *testing.T, d Date, expected string, from string) {
 	if expected != d.String {
 		t.Errorf("Unexpected result from %s: %v ≠ %v\n", from, expected, d.String)
 	}
-	if !d.Valid {
-		t.Error(from, "is invalid, but should be valid")
-	}
+  assertValid(t, d, from)
 }

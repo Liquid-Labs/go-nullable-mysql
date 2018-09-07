@@ -17,10 +17,6 @@ func TestNewBool(t *testing.T) {
 	assertBoolValue(t, NewBool(false), false, "NewBool(false)")
 }
 
-func TestNewNullBool(t *testing.T) {
-  assertInvalid(t, NewNullBool(), "NewNullBool()")
-}
-
 func TestUnmarshalBool(t *testing.T) {
 	var b Bool
   // true
@@ -33,8 +29,8 @@ func TestUnmarshalBool(t *testing.T) {
   assertNoError(t, json.Unmarshal(nullJson, &b))
 	assertInvalid(t, b, `json ` + nullString)
   // bad type, though valid JSON
-  assertError(t, json.Unmarshal(intJson, &b))
-	assertInvalid(t, b, `json ` + intString)
+  assertError(t, json.Unmarshal(positiveIntJson, &b))
+	assertInvalid(t, b, `json ` + positiveIntString)
   // invalid json
   assertJsonSyntaxError(t, json.Unmarshal(invalidJson, &b))
 	assertInvalid(t, b, `json ` + invalidJsonString)
@@ -71,7 +67,5 @@ func assertBoolValue(t *testing.T, b Bool, expected bool, from string) {
 	if expected != b.Bool {
 		t.Errorf("Unexpected result from %s: %v ≠ %v\n", from, expected, b.Bool)
 	}
-	if !b.Valid {
-		t.Error(from, "is invalid, but should be valid")
-	}
+	assertValid(t, b, from)
 }
