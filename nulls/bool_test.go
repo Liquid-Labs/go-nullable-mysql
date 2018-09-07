@@ -24,15 +24,15 @@ func TestNewNullBool(t *testing.T) {
 func TestUnmarshalBool(t *testing.T) {
 	var b Bool
   // true
-  panicIfErr(json.Unmarshal(boolTrueJson, &b))
+  assertNoError(t, json.Unmarshal(boolTrueJson, &b))
 	assertBoolValue(t, b, true, `json ` + boolTrueString)
   // false
-  panicIfErr(json.Unmarshal(boolFalseJson, &b))
+  assertNoError(t, json.Unmarshal(boolFalseJson, &b))
   assertBoolValue(t, b, false, `json ` + boolFalseString)
   // null
-  panicIfErr(json.Unmarshal(nullJson, &b))
+  assertNoError(t, json.Unmarshal(nullJson, &b))
 	assertInvalid(t, b, `json ` + nullString)
-  // bad type, thugh valid JSON
+  // bad type, though valid JSON
   assertError(t, json.Unmarshal(intJson, &b))
 	assertInvalid(t, b, `json ` + intString)
   // invalid json
@@ -42,15 +42,15 @@ func TestUnmarshalBool(t *testing.T) {
 
 func TestMarshalBool(t *testing.T) {
 	data, err := json.Marshal(NewBool(true))
-	panicIfErr(err)
+	assertNoError(t, err)
   assertJson(t, boolTrueJson, data)
 
   data, err = json.Marshal(NewBool(false))
-  panicIfErr(err)
+  assertNoError(t, err)
   assertJson(t, boolFalseJson, data)
 
   data, err = json.Marshal(NewNullBool())
-  panicIfErr(err)
+  assertNoError(t, err)
   assertJson(t, nullJson, data)
 }
 

@@ -51,33 +51,21 @@ func TestUnmarshalDate(t *testing.T) {
     }
   }
 }
-/*
-func TestMarshalBool(t *testing.T) {
-	data, err := json.Marshal(NewBool(true))
-	panicIfErr(err)
-  assertJson(t, boolTrueJson, data)
 
-  data, err = json.Marshal(NewBool(false))
-  panicIfErr(err)
-  assertJson(t, boolFalseJson, data)
-
-  data, err = json.Marshal(NewNullBool())
-  panicIfErr(err)
-  assertJson(t, nullJson, data)
+func TestMarshalDate(t *testing.T) {
+  d, err := NewDate(validDateString)
+  // note, we already tested the 'err' above, so we're not gonig to do it again
+  data, err := json.Marshal(d)
+  assertNoError(t, err)
+  assertJson(t, validDateJson, data)
 }
 
-func TestBoolScan(t *testing.T) {
-	var b Bool
-	panicIfErr(b.Scan(true))
-	assertBoolValue(t, b, true, "scanned true")
-
-  panicIfErr(b.Scan(false))
-	assertBoolValue(t, b, false, "scanned false")
-
-	panicIfErr(b.Scan(nil))
-	assertBoolNull(t, b, "scanned nil")
+func TestDateScan(t *testing.T) {
+	var d Date
+	panicIfErr(d.Scan(validDateString))
+	assertDateValue(t, d, validDateString, "scanned " + validDateString)
 }
-*/
+
 func assertDateValue(t *testing.T, d Date, expected string, from string) {
   t.Helper()
 	if expected != d.String {
