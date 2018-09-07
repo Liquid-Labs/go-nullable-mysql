@@ -16,7 +16,7 @@ func NewNullInt64() (Int64) {
   return Int64{sql.NullInt64{0, false}}
 }
 
-func (ni *Int64) MarshalJSON() ([]byte, error) {
+func (ni Int64) MarshalJSON() ([]byte, error) {
 	if !ni.Valid {
 		return nullJSON, nil
 	}

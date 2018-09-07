@@ -63,7 +63,7 @@ func (nt *Date) Scan(value interface{}) error {
 	return nil
 }
 
-func (nd *Date) MarshalJSON() ([]byte, error) {
+func (nd Date) MarshalJSON() ([]byte, error) {
   if !nd.Valid {
     return nullJSON, nil
   }

@@ -16,7 +16,7 @@ func NewNullFloat64() (Float64) {
   return Float64{sql.NullFloat64{0.0, false}}
 }
 
-func (nf *Float64) MarshalJSON() ([]byte, error) {
+func (nf Float64) MarshalJSON() ([]byte, error) {
 	if !nf.Valid {
 		return nullJSON, nil
 	}
