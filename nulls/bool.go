@@ -35,14 +35,10 @@ func (nb *Bool) UnmarshalJSON(b []byte) error {
 	return err
 }
 
-func (nb *Bool) Native() *sql.NullBool {
-  return &nb.NullBool
-}
-
-func (n *Bool) IsEmpty() (bool) {
+func (n Bool) IsEmpty() (bool) {
   return !n.Valid
 }
 
-func (n *Bool) IsValid() (bool) {
+func (n Bool) IsValid() (bool) {
   return n.Valid
 }

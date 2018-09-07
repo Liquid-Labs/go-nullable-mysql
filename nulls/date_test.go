@@ -1,24 +1,39 @@
 package nulls
 
 import (
-	"encoding/json"
+	// "encoding/json"
 	"testing"
 )
 
 var (
-  boolTrueString = `true`
-	boolTrueJson  = []byte(boolTrueString)
-  boolFalseString = `false`
-	boolFalseJson = []byte(boolFalseString)
+  validDateString = `2018-05-08`
+	validDateJson  = []byte(validDateString)
+  invalidMonthString = `2018-13-08`
+	invalidMonthJson = []byte(invalidMonthString)
+  invalidDayString = `2018-06-31`
+  ivalidDayJson = []byte(invalidDayString)
 )
 
-func TestNewBool(t *testing.T) {
-	assertBoolValue(t, NewBool(true), true, "NewBool(true)")
-	assertBoolValue(t, NewBool(false), false, "NewBool(false)")
-}
+func TestNewDate(t *testing.T) {
+  d, err := NewDate(validDateString)
+  assertNoError(t, err)
+	assertDateValue(t, d, validDateString, "NewDate(" + validDateString + ")")
 
+  d, err = NewDate(invalidMonthString)
+  assertError(t, err)
+	assertInvalid(t, d, "NewDate(" + invalidMonthString + ")")
+
+  d, err = NewDate(invalidDayString)
+  assertError(t, err)
+  assertInvalid(t, d, "NewDate(" + invalidDayString + ")")
+
+  d, err = NewDate(intString)
+  assertError(t, err)
+  assertInvalid(t, d, "NewDate(" + intString + ")")
+}
+/*
 func TestNewNullBool(t *testing.T) {
-  assertInvalid(t, NewNullBool(), "NewNullBool()")
+  assertBoolNull(t, NewNullBool(), "NewNullBool()")
 }
 
 func TestUnmarshalBool(t *testing.T) {
@@ -31,13 +46,13 @@ func TestUnmarshalBool(t *testing.T) {
   assertBoolValue(t, b, false, `json ` + boolFalseString)
   // null
   panicIfErr(json.Unmarshal(nullJson, &b))
-	assertInvalid(t, b, `json ` + nullString)
+	assertBoolNull(t, b, `json ` + nullString)
   // bad type, thugh valid JSON
   assertError(t, json.Unmarshal(intJson, &b))
-	assertInvalid(t, b, `json ` + intString)
+	assertBoolNull(t, b, `json ` + intString)
   // invalid json
   assertJsonSyntaxError(t, json.Unmarshal(invalidJson, &b))
-	assertInvalid(t, b, `json ` + invalidJsonString)
+	assertBoolNull(t, b, `json ` + invalidJsonString)
 }
 
 func TestMarshalBool(t *testing.T) {
@@ -63,15 +78,15 @@ func TestBoolScan(t *testing.T) {
 	assertBoolValue(t, b, false, "scanned false")
 
 	panicIfErr(b.Scan(nil))
-	assertInvalid(t, b, "scanned nil")
+	assertBoolNull(t, b, "scanned nil")
 }
-
-func assertBoolValue(t *testing.T, b Bool, expected bool, from string) {
+*/
+func assertDateValue(t *testing.T, d Date, expected string, from string) {
   t.Helper()
-	if expected != b.Bool {
-		t.Errorf("Unexpected result from %s: %v ≠ %v\n", from, expected, b.Bool)
+	if expected != d.String {
+		t.Errorf("Unexpected result from %s: %v ≠ %v\n", from, expected, d.String)
 	}
-	if !b.Valid {
+	if !d.Valid {
 		t.Error(from, "is invalid, but should be valid")
 	}
 }

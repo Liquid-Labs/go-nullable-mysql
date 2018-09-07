@@ -35,14 +35,10 @@ func (nf *Float64) UnmarshalJSON(b []byte) error {
 	return err
 }
 
-func (nf *Float64) Native() *sql.NullFloat64 {
-  return &nf.NullFloat64
-}
-
-func (n *Float64) IsEmpty() (bool) {
+func (n Float64) IsEmpty() (bool) {
   return !n.Valid
 }
 
-func (n *Float64) IsValid() (bool) {
+func (n Float64) IsValid() (bool) {
   return n.Valid
 }
