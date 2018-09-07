@@ -16,7 +16,7 @@ func NewNullBool() (Bool) {
   return Bool{sql.NullBool{false, false}}
 }
 
-func (nb *Bool) MarshalJSON() ([]byte, error) {
+func (nb Bool) MarshalJSON() ([]byte, error) {
 	if !nb.Valid {
 		return nullJSON, nil
 	}

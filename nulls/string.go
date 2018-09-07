@@ -16,7 +16,7 @@ func NewNullString() (String) {
   return String{sql.NullString{"", false}}
 }
 
-func (ns *String) MarshalJSON() ([]byte, error) {
+func (ns String) MarshalJSON() ([]byte, error) {
 	if !ns.Valid {
 		return nullJSON, nil
 	}
