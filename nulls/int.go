@@ -9,11 +9,11 @@ import (
 type Int64 struct { sql.NullInt64 }
 
 func NewInt64(i int64) (Int64) {
-  return Int64{sql.NullInt64{i, true}}
+  return Int64{sql.NullInt64{Int64: i, Valid: true}}
 }
 
 func NewNullInt64() (Int64) {
-  return Int64{sql.NullInt64{0, false}}
+  return Int64{sql.NullInt64{Int64: 0, Valid: false}}
 }
 
 func (ni Int64) MarshalJSON() ([]byte, error) {

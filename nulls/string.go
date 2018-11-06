@@ -9,11 +9,11 @@ import (
 type String struct { sql.NullString }
 
 func NewString(s string) (String) {
-  return String{sql.NullString{s, true}}
+  return String{sql.NullString{String: s, Valid: true}}
 }
 
 func NewNullString() (String) {
-  return String{sql.NullString{"", false}}
+  return String{sql.NullString{String: "", Valid: false}}
 }
 
 func (ns String) MarshalJSON() ([]byte, error) {

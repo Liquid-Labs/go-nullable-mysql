@@ -14,11 +14,11 @@ var nullTime, _ = time.Parse(time.RFC3339, "0000-00-00T00:00:00Z00:00")
 type Timestamp struct { mysql.NullTime }
 
 func NewTimestamp(t time.Time) (Timestamp) {
-  return Timestamp{mysql.NullTime{t, true}}
+  return Timestamp{mysql.NullTime{Time: t, Valid: true}}
 }
 
 func NewNullTimestamp() (Timestamp) {
-  return Timestamp{mysql.NullTime{nullTime, false}}
+  return Timestamp{mysql.NullTime{Time: nullTime, Valid: false}}
 }
 
 func (nt Timestamp) MarshalJSON() ([]byte, error) {

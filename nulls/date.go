@@ -46,14 +46,14 @@ func validateDate(s string) (error) {
 
 func NewDate(s string) (Date, error) {
   if err := validateDate(s); err == nil {
-    return Date{sql.NullString{s, true}}, nil
+    return Date{sql.NullString{String: s, Valid: true}}, nil
   } else {
     return NewNullDate(), err
   }
 }
 
 func NewNullDate() (Date) {
-  return Date{sql.NullString{"", false}}
+  return Date{sql.NullString{String: "", Valid: false}}
 }
 
 func (nt *Date) Scan(value interface{}) error {

@@ -9,11 +9,11 @@ import (
 type Float64 struct { sql.NullFloat64 }
 
 func NewFloat64(f float64) (Float64) {
-  return Float64{sql.NullFloat64{f, true}}
+  return Float64{sql.NullFloat64{Float64: f, Valid: true}}
 }
 
 func NewNullFloat64() (Float64) {
-  return Float64{sql.NullFloat64{0.0, false}}
+  return Float64{sql.NullFloat64{Float64: 0.0, Valid: false}}
 }
 
 func (nf Float64) MarshalJSON() ([]byte, error) {
