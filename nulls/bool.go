@@ -9,11 +9,11 @@ import (
 type Bool struct { sql.NullBool }
 
 func NewBool(b bool) (Bool) {
-  return Bool{sql.NullBool{b, true}}
+  return Bool{sql.NullBool{Bool: b, Valid: true}}
 }
 
 func NewNullBool() (Bool) {
-  return Bool{sql.NullBool{false, false}}
+  return Bool{sql.NullBool{Bool: false, Valid: false}}
 }
 
 func (nb Bool) MarshalJSON() ([]byte, error) {
