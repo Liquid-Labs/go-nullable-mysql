@@ -24,6 +24,8 @@ func validateDate(s string) (error) {
   }
   var year, month, day int64
   var err error
+  // I don't believe the following *can* error, beacuse it's already matched to
+  // a series of digits, but we go ahead and check for completeness.
   if year, err = strconv.ParseInt(matches[2], 10, 32); err != nil {
     return fmt.Errorf("'%s' does not parse as a date.", s)
   }
