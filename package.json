@@ -1,10 +1,12 @@
 {
   "name": "@liquid-labs/go-nullable-mysql",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Enhanced support of 'NULL' values in JSON marshalling and unmarshalling for MySQL datatypes in Go.",
   "scripts": {
-    "test": "cd nulls && go test",
-    "prepare": "cd nulls && go test all"
+    "build": "cd nulls && go build",
+    "prepare": "cd nulls && go test all",
+    "show-coverage": "cd nulls && go test -coverprofile=coverage.out && go tool cover -html=coverage.out",
+    "test": "cd nulls && go test"
   },
   "repository": {
     "type": "git",
