@@ -27,6 +27,9 @@ func assertValid(t *testing.T, n Nullable, from string) {
   if !n.IsValid() {
     t.Error(from, "is invalid, but should be valid")
   }
+  if n.IsEmpty() {
+    t.Error(from, "is empty, but should be non-empty.")
+  }
 }
 
 func assertInvalid(t *testing.T, n Nullable, from string) {
@@ -34,6 +37,9 @@ func assertInvalid(t *testing.T, n Nullable, from string) {
 	if n.IsValid() {
 		t.Error(from, "is valid, but should be invalid")
 	}
+  if !n.IsEmpty() {
+    t.Error(from, "is not empty, but should be empty.")
+  }
 }
 
 func assertJson(t *testing.T, expected []byte, result []byte) {

@@ -12,6 +12,8 @@ var (
 	invalidMonthJson = []byte(`"` + invalidMonthString + `"`)
   invalidDayString = `2018-06-31`
   invalidDayJson = []byte(`"` + invalidDayString + `"`)
+	nonIntYearString = `abc-05-08`
+	nonIntYearJson = []byte(`"` + nonIntYearString + `"`)
 )
 
 func TestNewDate(t *testing.T) {
@@ -30,6 +32,10 @@ func TestNewDate(t *testing.T) {
   d, err = NewDate(positiveIntString)
   assertError(t, err)
   assertInvalid(t, d, "NewDate(" + positiveIntString + ")")
+
+	d, err = NewDate(nonIntYearString)
+	assertError(t, err)
+	assertInvalid(t, d, "NewDate(" + nonIntYearString + ")")
 }
 
 func TestUnmarshalDate(t *testing.T) {
@@ -46,6 +52,9 @@ func TestUnmarshalDate(t *testing.T) {
       assertInvalid(t, d, `json ` + string(dateJson))
     }
   }
+
+	assertNoError(t, json.Unmarshal(nullJson, &d))
+	assertInvalid(t, d, `json ` + nullString)
 }
 
 func TestMarshalDate(t *testing.T) {
