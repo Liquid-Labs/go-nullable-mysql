@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Enhanced support of 'NULL' values in JSON marshalling and unmarshalling for MySQL datatypes in Go.",
   "scripts": {
-    "test": "cd nulls && go test"
+    "test": "cd nulls && go test",
+    "prepare": "cd nulls && go test all"
   },
   "repository": {
     "type": "git",
