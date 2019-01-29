@@ -3,6 +3,8 @@ package nulls
 import (
 	"encoding/json"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -18,23 +20,23 @@ var (
 
 func TestNewDate(t *testing.T) {
   d, err := NewDate(validDateString)
-  assertNoError(t, err)
+  assert.NoError(t, err)
 	assertDateValue(t, d, validDateString, "NewDate(" + validDateString + ")")
 
   d, err = NewDate(invalidMonthString)
-  assertError(t, err)
+  assert.Error(t, err)
 	assertInvalid(t, d, "NewDate(" + invalidMonthString + ")")
 
   d, err = NewDate(invalidDayString)
-  assertError(t, err)
+  assert.Error(t, err)
   assertInvalid(t, d, "NewDate(" + invalidDayString + ")")
 
   d, err = NewDate(positiveIntString)
-  assertError(t, err)
+  assert.Error(t, err)
   assertInvalid(t, d, "NewDate(" + positiveIntString + ")")
 
 	d, err = NewDate(nonIntYearString)
-	assertError(t, err)
+	assert.Error(t, err)
 	assertInvalid(t, d, "NewDate(" + nonIntYearString + ")")
 }
 
@@ -45,15 +47,15 @@ func TestUnmarshalDate(t *testing.T) {
   var d Date
   for i, dateJson := range testJsons {
     if i <= lastGood {
-      assertNoError(t, json.Unmarshal(dateJson, &d))
+      assert.NoError(t, json.Unmarshal(dateJson, &d))
     	assertDateValue(t, d, testStrings[i], `json ` + string(dateJson))
     } else {
-      assertError(t, json.Unmarshal(dateJson, &d))
+      assert.Error(t, json.Unmarshal(dateJson, &d))
       assertInvalid(t, d, `json ` + string(dateJson))
     }
   }
 
-	assertNoError(t, json.Unmarshal(nullJson, &d))
+	assert.NoError(t, json.Unmarshal(nullJson, &d))
 	assertInvalid(t, d, `json ` + nullString)
 }
 
@@ -61,14 +63,15 @@ func TestMarshalDate(t *testing.T) {
   d, err := NewDate(validDateString)
   // note, we already tested the 'err' above, so we're not gonig to do it again
   data, err := json.Marshal(d)
-  assertNoError(t, err)
-  assertJson(t, validDateJson, data)
+  assert.NoError(t, err)
+  assert.Equal(t, validDateJson, data)
 }
 
 func TestDateScan(t *testing.T) {
 	var d Date
-	panicIfErr(d.Scan(validDateString))
-	assertDateValue(t, d, validDateString, "scanned " + validDateString)
+	if assert.NoError(t, d.Scan(validDateString)) {
+		assertDateValue(t, d, validDateString, "scanned " + validDateString)
+	}
 }
 
 func assertDateValue(t *testing.T, d Date, expected string, from string) {
