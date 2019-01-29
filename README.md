@@ -1,6 +1,3 @@
-*Code is still very alpha... use at own risk.* It is under daily use, but need
-to complete tests, docs, etc. and breaking changes may be on the way.
-
 # go-nullable-mysql
 Enhanced support of `NULL` values in JSON marshalling and unmarshalling for MySQL datatypes in Go. I.e., SQL `NULL` <-> JSON `null`. Also, add support for MySQL `DATE` types.
 
