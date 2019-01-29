@@ -4,6 +4,8 @@ import (
 	"encoding/json"
   "fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -34,46 +36,49 @@ func TestUnmarshalFloat64(t *testing.T) {
 	var f Float64
 
   // int as float
-  assertNoError(t, json.Unmarshal(noDecimalFloatJson, &f))
+  assert.NoError(t, json.Unmarshal(noDecimalFloatJson, &f))
   assertFloatValue(t, f, 1.0, `json ` + noDecimalFloatString)
   // float with decimal values
-  assertNoError(t, json.Unmarshal(decimalFloatJson, &f))
+  assert.NoError(t, json.Unmarshal(decimalFloatJson, &f))
   assertFloatValue(t, f, 1.23, `json ` + decimalFloatString)
   // null
-  assertNoError(t, json.Unmarshal(nullJson, &f))
+  assert.NoError(t, json.Unmarshal(nullJson, &f))
 	assertInvalid(t, f, `json ` + nullString)
   // bad type, though valid JSON with quoted decimal value
-  assertError(t, json.Unmarshal(quotedDecimalFloatJson, &f))
+  assert.Error(t, json.Unmarshal(quotedDecimalFloatJson, &f))
 	assertInvalid(t, f, `json "` + decimalFloatString + `"`)
   // invalid json
-  assertJsonSyntaxError(t, json.Unmarshal(invalidJson, &f))
+	assert.IsType(t, new(json.SyntaxError), json.Unmarshal(invalidJson, &f))
 	assertInvalid(t, f, `json ` + invalidJsonString)
 }
 
 func TestMarshalFloat64(t *testing.T) {
 	data, err := json.Marshal(NewFloat64(1))
-	assertNoError(t, err)
-  assertJson(t, noDecimalFloatJson, data)
+	assert.NoError(t, err)
+  assert.Equal(t, noDecimalFloatJson, data)
 
   data, err = json.Marshal(NewFloat64(1.23))
-  assertNoError(t, err)
-  assertJson(t, decimalFloatJson, data)
+  assert.NoError(t, err)
+  assert.Equal(t, decimalFloatJson, data)
 
   data, err = json.Marshal(NewNullFloat64())
-  assertNoError(t, err)
-  assertJson(t, nullJson, data)
+  assert.NoError(t, err)
+  assert.Equal(t, nullJson, data)
 }
 
 func TestFloat64Scan(t *testing.T) {
 	var f Float64
-	panicIfErr(f.Scan(1))
-	assertFloatValue(t, f, 1.00, "scanned 1")
+	if assert.NoError(t, f.Scan(1)) {
+		assertFloatValue(t, f, 1.00, "scanned 1")
+	}
 
-  panicIfErr(f.Scan(1.23))
-	assertFloatValue(t, f, 1.23, "scanned 1.23")
+  if assert.NoError(t, f.Scan(1.23)) {
+		assertFloatValue(t, f, 1.23, "scanned 1.23")
+	}
 
-	panicIfErr(f.Scan(nil))
-	assertInvalid(t, f, "scanned nil")
+	if assert.NoError(t, f.Scan(nil)) {
+		assertInvalid(t, f, "scanned nil")
+	}
 }
 
 func assertFloatValue(t *testing.T, f Float64, expected float64, from string) {
